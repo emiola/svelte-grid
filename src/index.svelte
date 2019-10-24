@@ -20,11 +20,11 @@
 .svlt-grid-resizer {
   user-select: none;
   width: 20px;
-  height: 20px; 
-  position:absolute; 
-  right: 0; 
-  bottom: 0; 
-  cursor: se-resize; 
+  height: 20px;
+  position:absolute;
+  right: 0;
+  bottom: 0;
+  cursor: se-resize;
 }
 
 .svlt-grid-resizer::after {
@@ -41,7 +41,7 @@
 
 <svelte:window on:resize={ debounce(onResize,300) } />
 
-<div class:svlt-grid-transition={!focuesdItem} class=svlt-grid-container bind:this={container} style="height: {ch}px">
+<div class:svlt-grid-transition={!focusedItem} class=svlt-grid-container bind:this={container} style="height: {ch}px">
   {#each items as item, i (item.id)}
 
     <div on:mousedown={item.draggable ? dragOnMouseDown.bind(this, item.id) : null}
@@ -56,8 +56,8 @@
 
           <slot {item} index={i}></slot>
           {#if item.resizable}
-            <div class=svlt-grid-resizer 
-          on:touchstart={resizeOnMouseDown.bind(this,item.id)} 
+            <div class=svlt-grid-resizer
+          on:touchstart={resizeOnMouseDown.bind(this,item.id)}
           on:mousedown={resizeOnMouseDown.bind(this,item.id)}
           ></div>
           {/if}
@@ -93,7 +93,7 @@ export let breakpoints;
 export let fillEmpty = true;
 
 let container,
-  focuesdItem,
+  focusedItem,
   bound,
   xPerPx,
   currentItemIndex,
@@ -125,11 +125,11 @@ function onResize() {
 
   if(w !== documentWidth) {
     documentWidth = w;
-    
+
     bound = container.getBoundingClientRect();
 
     let getCols = getColumnFromBreakpoints(breakpoints,w,cols,initCols)
-    
+
     getComputedCols = getCols
 
     xPerPx = bound.width / getCols
@@ -144,7 +144,7 @@ function onResize() {
     	items = resizeItems(items, getCols);
     }
 
-  } 
+  }
 
 }
 
@@ -153,7 +153,7 @@ onMount(() => {
   bound = container.getBoundingClientRect();
 
   let getCols = getColumnFromBreakpoints(breakpoints, getDocWidth(), cols, initCols)
-  
+
   getComputedCols = getCols
 
   documentWidth = document.documentElement.clientWidth
@@ -185,18 +185,18 @@ function resizeOnMouseDown(id, e) {
 
   currentItemIndex = index;
 
-  focuesdItem = item;
+  focusedItem = item;
 
   cacheItem = {...item}
 
   resizeNoDynamicCalc = item.h + item.y === getRowsCount(items);
 
-  shadow = {...shadow,...focuesdItem,...{active:true}}
+  shadow = {...shadow,...focusedItem,...{active:true}}
 
   resizeStartX = pageX - bound.x;
   resizeStartY = pageY - bound.y;
 
-  resizeStartWidth = (item.w * xPerPx) - (gap * 2) - (focuesdItem.responsive.valueW * xPerPx);
+  resizeStartWidth = (item.w * xPerPx) - (gap * 2) - (focusedItem.responsive.valueW * xPerPx);
 
   resizeStartHeight = (item.h * yPerPx) - (gap * 2);
 
@@ -219,12 +219,12 @@ function resizeOnMouseMove(e) {
   const height = resizeStartHeight + pageY - resizeStartY;
   const width = resizeStartWidth + (pageX - resizeStartX)
 
-  const {responsive:{valueW} } = focuesdItem;
+  const {responsive:{valueW} } = focusedItem;
 
   let wRes = Math.round(width / xPerPx) + valueW
 
-  const {h:minHeight=1,w:minWidth=1} = focuesdItem.min
-  const {h:maxHeight,w:maxWidth = ((getComputedCols - focuesdItem.x)+valueW)} = focuesdItem.max
+  const {h:minHeight=1,w:minWidth=1} = focusedItem.min
+  const {h:maxHeight,w:maxWidth = ((getComputedCols - focusedItem.x)+valueW)} = focusedItem.max
 
   wRes = Math.min(Math.max(wRes,minWidth),maxWidth)/* min max*/
 
@@ -234,7 +234,7 @@ function resizeOnMouseMove(e) {
   }
   hRes = Math.max(hRes,minHeight)
 
-  shadow = {...shadow, ...{w:wRes, h:hRes}} 
+  shadow = {...shadow, ...{w:wRes, h:hRes}}
 
   let assignItem = items[currentItemIndex]
   items[currentItemIndex] = {
@@ -272,11 +272,11 @@ function resizeOnMouseUp(e) {
   window.removeEventListener("mouseup", resizeOnMouseUp, false);
   window.removeEventListener("touchend", resizeOnMouseUp, false);
 
-  shadow = {...shadow, ... {w:0,h:0,x:0,y:0,active:false,id:null,responsive:{valueW:0}}, min:{},max:{} } 
+  shadow = {...shadow, ... {w:0,h:0,x:0,y:0,active:false,id:null,responsive:{valueW:0}}, min:{},max:{} }
 
   recalculateGridPosition("up");
 
-  focuesdItem = undefined;
+  focusedItem = undefined;
   resizeNoDynamicCalc = false;
 }
 
@@ -293,16 +293,16 @@ function dragOnMouseDown(id, e) {
   let {pageX,pageY} = getCordinates(e)
 
   const { item, index } = getItemById(id, items);
-  
+
   currentItemIndex = index;
 
 
-  focuesdItem = item;
+  focusedItem = item;
   cacheItem = {...item}
-  
-  shadow = { ...shadow, ...item, active: true }; 
 
-  
+  shadow = { ...shadow, ...item, active: true };
+
+
 
   let { currentTarget } = e;
 
@@ -350,7 +350,7 @@ function dragOnMove(e) {
   let xRes = Math.round((x - dragX) / xPerPx);
   let yRes = Math.round((y - dragY) / yPerPx);
 
-  xRes = Math.max(Math.min(xRes,getComputedCols-(focuesdItem.w- focuesdItem.responsive.valueW)),0)
+  xRes = Math.max(Math.min(xRes,getComputedCols-(focusedItem.w- focusedItem.responsive.valueW)),0)
 
   yRes = Math.max(yRes, 0);
 
@@ -392,11 +392,11 @@ function dragOnMouseUp(e) {
   dragX = 0;
   dragY = 0;
 
-  shadow = {...shadow, ...{w:0,h:0,x:0,y:0,active:false,id:null}} 
-  
+  shadow = {...shadow, ...{w:0,h:0,x:0,y:0,active:false,id:null}}
+
   recalculateGridPosition("up");
 
-  focuesdItem = undefined;
+  focusedItem = undefined;
 }
 
 
@@ -430,13 +430,13 @@ function recalculateGridPosition(action) {
   items = result
 
   dispatch('adjust', {
-    focuesdItem: dragItem
+    focusedItem: dragItem
   });
 
 }
 
 beforeUpdate(() => {
-  if (!focuesdItem) {
+  if (!focusedItem) {
     ch = getContainerHeight(items, yPerPx);
     if(cols !== initCols) {
       if(bound) {
