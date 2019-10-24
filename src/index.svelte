@@ -14,6 +14,7 @@
   export let rowHeight = 150;
   export let breakpoints;
   export let fillEmpty = true;
+  export let autoAdjust = true;
 
   let container,
     focusedItem,
@@ -167,8 +168,10 @@
       h: hRes,
     };
 
-    if (!resizeNoDynamicCalc) {
-      debounceRecalculateGridPosition();
+    if (!autoAdjust) {
+      if (!resizeNoDynamicCalc) {
+        debounceRecalculateGridPosition();
+      }
     }
 
     dispatch("itemResize", { item: assignItem });
@@ -195,7 +198,9 @@
 
     shadow = { ...shadow, ...{ w: 0, h: 0, x: 0, y: 0, active: false, id: null, responsive: { valueW: 0 } }, min: {}, max: {} };
 
-    recalculateGridPosition("up");
+    if (!autoAdjust) {
+      recalculateGridPosition("up");
+    }
 
     focusedItem = undefined;
     resizeNoDynamicCalc = false;
@@ -285,7 +290,9 @@
 
     shadow = { ...shadow, ...{ x: xRes, y: yRes } };
 
-    debounceRecalculateGridPosition();
+    if (!autoAdjust) {
+      debounceRecalculateGridPosition();
+    }
   }
 
   function dragOnMouseUp(e) {
@@ -310,7 +317,9 @@
 
     shadow = { ...shadow, ...{ w: 0, h: 0, x: 0, y: 0, active: false, id: null } };
 
-    recalculateGridPosition("up");
+    if (!autoAdjust) {
+      recalculateGridPosition("up");
+    }
 
     focusedItem = undefined;
 
