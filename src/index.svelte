@@ -168,7 +168,7 @@
       h: hRes,
     };
 
-    if (!autoAdjust) {
+    if (autoAdjust) {
       if (!resizeNoDynamicCalc) {
         debounceRecalculateGridPosition();
       }
@@ -198,7 +198,7 @@
 
     shadow = { ...shadow, ...{ w: 0, h: 0, x: 0, y: 0, active: false, id: null, responsive: { valueW: 0 } }, min: {}, max: {} };
 
-    if (!autoAdjust) {
+    if (autoAdjust) {
       recalculateGridPosition("up");
     }
 
@@ -290,7 +290,7 @@
 
     shadow = { ...shadow, ...{ x: xRes, y: yRes } };
 
-    if (!autoAdjust) {
+    if (autoAdjust) {
       debounceRecalculateGridPosition();
     }
   }
@@ -318,7 +318,7 @@
 
       shadow = { ...shadow, ...{ w: 0, h: 0, x: 0, y: 0, active: false, id: null } };
 
-      if (!autoAdjust) {
+      if (autoAdjust) {
         recalculateGridPosition("up");
       }
 
