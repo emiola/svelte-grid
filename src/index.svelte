@@ -222,6 +222,7 @@ function resizeOnMouseMove(e) {
   const {responsive:{valueW} } = focusedItem;
 
   let wRes = Math.round(width / xPerPx) + valueW
+    dispatch("itemResize", { item: assignItem });
 
   const {h:minHeight=1,w:minWidth=1} = focusedItem.min
   const {h:maxHeight,w:maxWidth = ((getComputedCols - focusedItem.x)+valueW)} = focusedItem.max
@@ -395,6 +396,7 @@ function dragOnMouseUp(e) {
   shadow = {...shadow, ...{w:0,h:0,x:0,y:0,active:false,id:null}}
 
   recalculateGridPosition("up");
+    dispatch("itemDrag", { id: currentItemIndex });
 
   focusedItem = undefined;
 }
