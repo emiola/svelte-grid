@@ -173,8 +173,6 @@
         debounceRecalculateGridPosition();
       }
     }
-
-    dispatch("itemResize", { item: assignItem });
   }
 
   function resizeOnMouseUp(e) {
@@ -204,6 +202,8 @@
 
     focusedItem = undefined;
     resizeNoDynamicCalc = false;
+
+    dispatch("itemResize", { item: assignItem });
   }
 
   // drag
