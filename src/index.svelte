@@ -423,7 +423,7 @@
       item-id={item.id}>
 
       <slot {item} index={i} />
-      {#if item.resizable}
+      {#if item.resizable && !item.collapsed}
         <div class="svlt-grid-resizer" on:touchstart={resizeOnMouseDown.bind(this, item.id)} on:mousedown={resizeOnMouseDown.bind(this, item.id)} />
       {/if}
     </div>
@@ -433,6 +433,6 @@
     <div
       class="svlt-grid-shadow"
       style="{useTransform ? `transform: translate(${shadow.drag.dragging ? shadow.drag.left : shadow.x * xPerPx + gap}px, ${shadow.drag.dragging ? shadow.drag.top : shadow.y * yPerPx + gap}px);` : ''}; {!useTransform ? `top: ${shadow.drag.dragging ? shadow.drag.top : shadow.y * yPerPx + gap}px` : ''};
-      {!useTransform ? `left: ${shadow.drag.dragging ? shadow.drag.left : shadow.x * xPerPx + gap}px` : ''}; width:{shadow.w * xPerPx - gap * 2 - shadow.responsive.valueW * xPerPx}px; height:{shadow.h * yPerPx - gap * 2}px;" />
+      {!useTransform ? `left: ${shadow.drag.dragging ? shadow.drag.left : shadow.x * xPerPx + gap}px` : ''}; width:{shadow.w * xPerPx - gap * 2 - shadow.responsive.valueW * xPerPx}px; height: {item.collapsed ? rowHeight : shadow.h * yPerPx - gap * 2}px; />
   {/if}
 </div>
