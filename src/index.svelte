@@ -220,36 +220,36 @@
 
     const { item, index } = getItemById(id, items);
 
-    currentItemIndex = index;
+    if (item && !item.static) {
+      currentItemIndex = index;
 
-    focusedItem = item;
-    cacheItem = { ...item };
+      focusedItem = item;
+      cacheItem = { ...item };
 
-    shadow = { ...shadow, ...item, active: true };
+      shadow = { ...shadow, ...item, active: true };
 
-    let { currentTarget } = e;
+      let { currentTarget } = e;
 
-    let offsetLeft, offsetTop;
+      let offsetLeft, offsetTop;
 
-    if (useTransform) {
-      const { x, y } = getTranslate(currentTarget.style.transform);
-      offsetLeft = x;
-      offsetTop = y;
-    } else {
-      offsetLeft = currentTarget.offsetLeft;
-      offsetTop = currentTarget.offsetTop;
-    }
+      if (useTransform) {
+        const { x, y } = getTranslate(currentTarget.style.transform);
+        offsetLeft = x;
+        offsetTop = y;
+      } else {
+        offsetLeft = currentTarget.offsetLeft;
+        offsetTop = currentTarget.offsetTop;
+      }
 
-    pageX = pageX - bound.x;
-    pageY = pageY - bound.y;
+      pageX = pageX - bound.x;
+      pageY = pageY - bound.y;
 
-    dragX = pageX - offsetLeft;
+      dragX = pageX - offsetLeft;
 
-    dragY = pageY - offsetTop;
+      dragY = pageY - offsetTop;
 
-    getComputedCols = getColumnFromBreakpoints(breakpoints, getDocWidth(), cols, initCols);
+      getComputedCols = getColumnFromBreakpoints(breakpoints, getDocWidth(), cols, initCols);
 
-    if (item) {
       window.addEventListener("mousemove", dragOnMove, false);
       window.addEventListener("touchmove", dragOnMove, false);
 
@@ -296,34 +296,36 @@
   }
 
   function dragOnMouseUp(e) {
-    window.removeEventListener("mousemove", dragOnMove, false);
-    window.removeEventListener("touchmove", dragOnMove, false);
+    if (!items[currentItemIndex].static) {
+      window.removeEventListener("mousemove", dragOnMove, false);
+      window.removeEventListener("touchmove", dragOnMove, false);
 
-    window.removeEventListener("mouseup", dragOnMouseUp, false);
-    window.removeEventListener("touchend", dragOnMouseUp, false);
+      window.removeEventListener("mouseup", dragOnMouseUp, false);
+      window.removeEventListener("touchend", dragOnMouseUp, false);
 
-    let assignItem = items[currentItemIndex];
-    items[currentItemIndex] = {
-      ...assignItem,
-      drag: {
-        dragging: false,
-        top: 0,
-        left: 0,
-      },
-    };
+      let assignItem = items[currentItemIndex];
+      items[currentItemIndex] = {
+        ...assignItem,
+        drag: {
+          dragging: false,
+          top: 0,
+          left: 0,
+        },
+      };
 
-    dragX = 0;
-    dragY = 0;
+      dragX = 0;
+      dragY = 0;
 
-    shadow = { ...shadow, ...{ w: 0, h: 0, x: 0, y: 0, active: false, id: null } };
+      shadow = { ...shadow, ...{ w: 0, h: 0, x: 0, y: 0, active: false, id: null } };
 
-    if (!autoAdjust) {
-      recalculateGridPosition("up");
+      if (!autoAdjust) {
+        recalculateGridPosition("up");
+      }
+
+      focusedItem = undefined;
+
+      dispatch("itemDrag", { id: currentItemIndex });
     }
-
-    focusedItem = undefined;
-
-    dispatch("itemDrag", { id: currentItemIndex });
   }
 
   // Will work on this, need to make code cleaner
