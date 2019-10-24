@@ -20,11 +20,11 @@
 .svlt-grid-resizer {
   user-select: none;
   width: 20px;
-  height: 20px; 
-  position:absolute; 
-  right: 0; 
-  bottom: 0; 
-  cursor: se-resize; 
+  height: 20px;
+  position:absolute;
+  right: 0;
+  bottom: 0;
+  cursor: se-resize;
 }
 
 .svlt-grid-resizer::after {
@@ -56,8 +56,8 @@
 
           <slot {item} index={i}></slot>
           {#if item.resizable}
-            <div class=svlt-grid-resizer 
-          on:touchstart={resizeOnMouseDown.bind(this,item.id)} 
+            <div class=svlt-grid-resizer
+          on:touchstart={resizeOnMouseDown.bind(this,item.id)}
           on:mousedown={resizeOnMouseDown.bind(this,item.id)}
           ></div>
           {/if}
@@ -125,11 +125,11 @@ function onResize() {
 
   if(w !== documentWidth) {
     documentWidth = w;
-    
+
     bound = container.getBoundingClientRect();
 
     let getCols = getColumnFromBreakpoints(breakpoints,w,cols,initCols)
-    
+
     getComputedCols = getCols
 
     xPerPx = bound.width / getCols
@@ -144,7 +144,7 @@ function onResize() {
     	items = resizeItems(items, getCols);
     }
 
-  } 
+  }
 
 }
 
@@ -153,7 +153,7 @@ onMount(() => {
   bound = container.getBoundingClientRect();
 
   let getCols = getColumnFromBreakpoints(breakpoints, getDocWidth(), cols, initCols)
-  
+
   getComputedCols = getCols
 
   documentWidth = document.documentElement.clientWidth
@@ -234,7 +234,7 @@ function resizeOnMouseMove(e) {
   }
   hRes = Math.max(hRes,minHeight)
 
-  shadow = {...shadow, ...{w:wRes, h:hRes}} 
+  shadow = {...shadow, ...{w:wRes, h:hRes}}
 
   let assignItem = items[currentItemIndex]
   items[currentItemIndex] = {
@@ -272,7 +272,7 @@ function resizeOnMouseUp(e) {
   window.removeEventListener("mouseup", resizeOnMouseUp, false);
   window.removeEventListener("touchend", resizeOnMouseUp, false);
 
-  shadow = {...shadow, ... {w:0,h:0,x:0,y:0,active:false,id:null,responsive:{valueW:0}}, min:{},max:{} } 
+  shadow = {...shadow, ... {w:0,h:0,x:0,y:0,active:false,id:null,responsive:{valueW:0}}, min:{},max:{} }
 
   recalculateGridPosition("up");
 
@@ -293,16 +293,16 @@ function dragOnMouseDown(id, e) {
   let {pageX,pageY} = getCordinates(e)
 
   const { item, index } = getItemById(id, items);
-  
+
   currentItemIndex = index;
 
 
   focusedItem = item;
   cacheItem = {...item}
-  
-  shadow = { ...shadow, ...item, active: true }; 
 
-  
+  shadow = { ...shadow, ...item, active: true };
+
+
 
   let { currentTarget } = e;
 
@@ -392,8 +392,8 @@ function dragOnMouseUp(e) {
   dragX = 0;
   dragY = 0;
 
-  shadow = {...shadow, ...{w:0,h:0,x:0,y:0,active:false,id:null}} 
-  
+  shadow = {...shadow, ...{w:0,h:0,x:0,y:0,active:false,id:null}}
+
   recalculateGridPosition("up");
 
   focusedItem = undefined;
